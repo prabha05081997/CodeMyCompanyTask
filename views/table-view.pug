@@ -1,0 +1,56 @@
+extends layout
+
+block content
+	h1 #{title}
+	table#table_view.table.table-striped.table-bordered(style='width:100%', border='1')
+		- let n = 0;
+		thead
+			tr
+				if table_view_datas
+					each table_view_data in table_view_datas
+						th #{table_view_data.col_name}
+		tbody
+			while n < 20
+				tr
+					if table_view_datas
+						each table_view_data in table_view_datas
+							td #{table_view_data.value[n]}
+				- n++
+		//- thead
+		//- 	tr
+		//- 		th hello
+		//- 		th world
+		//- tbody
+		//- 	tr
+		//- 		td test
+		//- 		td sample
+		//- 	tr
+		//- 		td sample
+		//- 		td test
+	a.btn.btn-primary(href=`/v1/gettableentry`) Go Back 
+block scripts
+	script.
+		$(() => {
+			//- setTimeout((() => $('#table_view').DataTable({
+			//- 	"bJQueryUI": true,
+			//- 	"sPaginationType": "full_numbers",
+			//- 	"bPaginate": true,
+			//- 	"bFilter": true,
+			//- 	"bSort": true,
+			//- 	//- "aaSorting": [
+			//- 	//- 	[0, "asc"]
+			//- 	//- ],
+			//- 	//- "aoColumnDefs": [{
+			//- 	//- 	"bSortable": true,
+			//- 	//- 	"aTargets": [0]
+			//- 	//- }]
+			//- })), 5000)
+			
+			$('#table_view').dataTable({
+				"bJQueryUI": true,
+				"sPaginationType": "full_numbers",
+				"bPaginate": true,
+				"bFilter": true,
+				"bSort": true,
+			});
+		})

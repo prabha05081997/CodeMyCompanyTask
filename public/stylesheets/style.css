@@ -1,0 +1,86 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.column_creation {
+  width: 400px;
+  padding: 40px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: #191919;
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+.column_creation input[type="text"], .column_creation select {
+  border: 0;
+  border: 1px solid blue;
+  padding: 14px 10px;
+  border-radius: 25px;
+  display: block;
+  margin: 20px auto;
+  transition: .25s;
+  background: none;
+  width: 250px;
+  outline: none;
+  color: white;
+}
+
+.column_creation select {
+	-webkit-appearance:none;
+	-moz-appearance:none;
+  -ms-appearance:none;
+  background:url('/images/down-arrow.png');
+	background-repeat:no-repeat;
+	background-size:16px 17px;
+	background-position:95% center;
+}
+
+option {
+  color: black
+}
+
+.col_submit {
+  border: 0;
+  border: 1px solid #2ecc71;
+  padding: 14px 40px;
+  border-radius: 25px;
+  background: none;
+  outline: none;
+  color: white;
+}
+
+.column_creation input[type="text"]:focus, .column_creation select:focus {
+  width: 280px;
+  border-color: #2ecc71;
+}
+
+#mytable, .table_header, .table_column {
+  border-collapse:collapse;
+  border: solid 1px #ccc;
+  padding: 10px 20px;
+  text-align: center;
+}
+
+.table_header {
+  background: #0f4871;
+  color: #fff;
+}
+
+.table_row:nth-child(2n) {
+  background: #f1f1f1;
+}
+
+.table_column:hover {
+  color: #fff;
+  background: #CA293E;
+}
+.table_column:focus {
+  background: #f44;
+} 

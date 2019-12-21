@@ -1,0 +1,155 @@
+extends layout
+
+block content
+	h1 #{title}
+	form.table_entry(method="post" action="/v1/posttableview" autocomplete="off" role="presentation")
+		table#mytable(style='width:100%', border='1')
+			- let n = 0;
+			- let index = 0;
+			tr.table_row
+				if column_datas
+					each column_data in column_datas
+						th.table_header #{column_data.col_name}
+			while n < 20
+				tr.table_row
+					if column_datas
+						each column_data in column_datas
+							if column_data.col_type === 'multiselect'
+								td.table_column(tabindex=index++)
+									select.form-control(id=`select_${n}` name=`select_${n}` style="width: 100%")
+										each column in column_data.multiselect_value
+											if column_data.value && column_data.value.length > 0 && column_data.value.length <= 20 && column_data.value[n] == column
+												option(value=column selected="true") #{column}
+											else
+												option(value=column) #{column}
+							else
+								if column_data.col_type === 'date'
+									td.table_column(tabindex=index++)
+										if column_data.value && column_data.value.length > 0 && column_data.value.length <= 20
+											input(type="text" id=`date_${n}` name=`date_${n}` autocomplete="none"  value=column_data.value[n] style="width: 100%")
+										else
+											input(type="text" id=`date_${n}` name=`date_${n}`  autocomplete="none" style="width: 100%")
+								else if column_data.col_type === 'number'
+									td.table_column(tabindex=index++)
+										if column_data.value && column_data.value.length > 0 && column_data.value.length <= 20
+											input(type="number" id=`number_${n}` name=`number_${n}`  autocomplete="none" value=column_data.value[n] style="width: 100%")
+										else
+											input(type="number" id=`number_${n}` name=`number_${n}`  autocomplete="none" style="width: 100%")
+							//- #{column_data.col_type}
+				- n++
+		.row(style="margin-top:20px")
+			.col-md-12.text-center
+				a.btn.btn-primary.center-block.mr-2(href=`/v1/getcolumncreation` style="width: 100px;") Go Back
+				input.table_submit.btn.btn-success.center-block(type="submit", style="width: 100px;" name='table_submit', value='Show View')
+block scripts
+	script.
+		$(() => {
+			//- triggerDatepicker = function(val) {
+			//- 	let id = val.id.split('_')[1];
+			//- 	$(`#date_${id}`).datepicker();
+			//- }
+			
+			for(let i = 0; i < 20; i++) {
+				$(`#date_${i}`).datepicker();
+			}
+			//- //- $('.btn-table-entry').on('click', function(e) {
+			//- $('.btn-success').on('click', function(e) {
+			//- 	e.preventDefault();
+			//- 	const form = $('.table_entry');
+			//- 	//- let column_name = $("#column_name").val().trim();
+			//- 	//- let column_select = $( "#column_select" ).val();
+			//- 	//- if(column_select === 'multiselect') {
+			//- 	//- 	column_select = $('#column_type_value').val().trim();
+			//- 	//- }
+			//- 	//- console.log('col', column_name, column_select);
+			//- 	//- console.log(form)
+			//- 	//- if(!column_name.length) return false;
+			//- 	//- if(!column_select.length) return false;
+				
+			//- 	let dates = numbers = selectBox = []
+
+			//- 	for(let i = 0; i < 4; i++) {
+			//- 		dates[i] = $(`#date_${i}`).val();
+			//- 		numbers[i] = $(`#number_${i}`).val();
+			//- 		selectBox[i] = $(`#select_${i}`).val();
+			//- 	}
+			//- 	let tableData = {
+			//- 		'dates' : dates,
+			//- 		'numbers' : numbers,
+			//- 		'selectBox' : selectBox
+			//- 	};
+
+			//- 	location.href = `/v1/gettableview?table_data=${JSON.stringify(tableData)}`;
+			//- 	//- form.submit()
+			//- })
+			//- */
+			$('.table_entry').submit(function(e) {
+				let table_data = []
+				$('#mytable tr').each(function(){
+					console.log('row')
+					let td_data = []
+					$(this).find('td').each(function(){
+						console.log($(this).children().val());
+						td_data.push($(this).children().val());
+						let header = $(this).closest('table').find('th').eq($(this).index());
+						console.log(header.text())
+					})
+					table_data.push({
+						"row_data" : td_data
+					})
+				})
+
+				console.log(table_data)
+
+				$("<input />").attr("type", "hidden").attr("name", "table_data").attr("value", JSON.stringify(table_data)).appendTo(".table_entry");
+				return true;
+			})
+
+
+			var currCell = $('td').first();
+
+			// User clicks on a cell
+			$('td').click(function() {
+					currCell = $(this);
+			});
+
+			// User navigates table using keyboard
+			$('table').keydown(function (e) {
+					var c = "";
+					if (e.which == 39) {
+							// Right Arrow
+							c = currCell.next();
+					} else if (e.which == 37) { 
+							// Left Arrow
+							c = currCell.prev();
+					} else if (e.which == 38) { 
+							// Up Arrow
+							c = currCell.closest('tr').prev().find('td:eq(' + 
+								currCell.index() + ')');
+					} else if (e.which == 40) { 
+							// Down Arrow
+							c = currCell.closest('tr').next().find('td:eq(' + 
+								currCell.index() + ')');
+					} else if ((e.which == 13 || e.which == 32)) { 
+							// Enter or Spacebar - edit cell
+							e.preventDefault();
+							//- edit();
+					} 
+					else if ((e.which == 9 && !e.shiftKey)) { 
+							// Tab
+							e.preventDefault();
+							c = currCell.next();
+					} else if ((e.which == 9 && e.shiftKey)) { 
+							// Shift + Tab
+							e.preventDefault();
+							c = currCell.prev();
+					} 
+
+					// If we didn't hit a boundary, update the current cell
+					if (c.length > 0) {
+							console.log('focus', c)
+							currCell = c;
+							currCell.focus();
+					}
+			});
+		})

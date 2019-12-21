@@ -1,0 +1,63 @@
+extends layout
+
+block content
+	h1 #{title}
+	form.column_creation(method="post" action="/v1/postcolumncreation" autocomplete="off")
+		input.form-control.column(type="text" id="column_name" name="column_name" placeholder="Column Name" autocomplete="none")
+		select(id="column_select" name="column_type_select" autocomplete="none")
+			each column in column_types
+				if column === 'date'
+					option(value=column selected='true') #{column}
+				else
+					option(value=column) #{column}
+		input.form-control.column(type="text" id="column_type_value" name="column_type_value" placeholder="Type values comma separated" hidden='true' autocomplete="none")
+		p#error_text(style="color:red; display: none") * input field cannot be empty
+		input.col_submit.btn.btn-success(type="submit", name='col_submit', value='Submit')
+block scripts
+	script.
+		$(() => {
+			$('select').on('change', function() {
+				if(this.value === 'multiselect') {
+					$('#column_type_value').attr('hidden', false);
+				} else {
+					$('#column_type_value').attr('hidden', true);
+				}
+			});
+
+			$('input').on('blur', function() {
+				if($(this).val().trim() === "")
+					$('#error_text').css('display', 'block');
+				else
+					$('#error_text').css('display', 'none');
+			})
+
+			$('.col_submit').on('click', function(e) {
+				e.preventDefault();
+				const form = $('.column_creation');
+				let column_name = $("#column_name").val().trim();
+				let column_select = $( "#column_select" ).val();
+				if(column_select === 'multiselect') {
+					column_select = $('#column_type_value').val().trim();
+				}
+				console.log('col', column_name, column_select);
+				console.log(form)
+				if(!column_name.length || !column_select.length) {
+					$('#error_text').css('display', 'block');
+					return false;
+				}
+				
+				form.submit()
+
+				//- $.ajax({
+				//- 	method: "POST",
+				//- 	url: '/v1/posttableentry',
+				//- 	data: {
+				//- 		col_name,
+				//- 		col_type
+				//- 	},
+				//- 	success: function(data){
+				//- 		console.log('success', data)
+				//- 	}
+				//- });
+			})
+		})
