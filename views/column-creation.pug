@@ -39,25 +39,12 @@ block scripts
 				if(column_select === 'multiselect') {
 					column_select = $('#column_type_value').val().trim();
 				}
-				console.log('col', column_name, column_select);
-				console.log(form)
+
 				if(!column_name.length || !column_select.length) {
 					$('#error_text').css('display', 'block');
 					return false;
 				}
 				
 				form.submit()
-
-				//- $.ajax({
-				//- 	method: "POST",
-				//- 	url: '/v1/posttableentry',
-				//- 	data: {
-				//- 		col_name,
-				//- 		col_type
-				//- 	},
-				//- 	success: function(data){
-				//- 		console.log('success', data)
-				//- 	}
-				//- });
 			})
 		})

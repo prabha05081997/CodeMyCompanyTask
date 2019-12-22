@@ -26,9 +26,9 @@ block content
 								if column_data.col_type === 'date'
 									td.table_column(tabindex=index++)
 										if column_data.value && column_data.value.length > 0 && column_data.value.length <= 20
-											input(type="text" id=`date_${n}` name=`date_${n}` autocomplete="none"  value=column_data.value[n] style="width: 100%")
+											input(type="text" class='date' id=`date_${n}` name=`date_${n}` autocomplete="none"  value=column_data.value[n] style="width: 100%")
 										else
-											input(type="text" id=`date_${n}` name=`date_${n}`  autocomplete="none" style="width: 100%")
+											input(type="text" class='date' id=`date_${n}` name=`date_${n}`  autocomplete="none" style="width: 100%")
 								else if column_data.col_type === 'number'
 									td.table_column(tabindex=index++)
 										if column_data.value && column_data.value.length > 0 && column_data.value.length <= 20
@@ -44,62 +44,28 @@ block content
 block scripts
 	script.
 		$(() => {
-			//- triggerDatepicker = function(val) {
-			//- 	let id = val.id.split('_')[1];
-			//- 	$(`#date_${id}`).datepicker();
-			//- }
 			
-			for(let i = 0; i < 20; i++) {
-				$(`#date_${i}`).datepicker();
-			}
-			//- //- $('.btn-table-entry').on('click', function(e) {
-			//- $('.btn-success').on('click', function(e) {
-			//- 	e.preventDefault();
-			//- 	const form = $('.table_entry');
-			//- 	//- let column_name = $("#column_name").val().trim();
-			//- 	//- let column_select = $( "#column_select" ).val();
-			//- 	//- if(column_select === 'multiselect') {
-			//- 	//- 	column_select = $('#column_type_value').val().trim();
-			//- 	//- }
-			//- 	//- console.log('col', column_name, column_select);
-			//- 	//- console.log(form)
-			//- 	//- if(!column_name.length) return false;
-			//- 	//- if(!column_select.length) return false;
-				
-			//- 	let dates = numbers = selectBox = []
+			//- for(let i = 0; i < 20; i++) {
+			//- 	$(`#date_${i}`).datepicker();
+			//- }
 
-			//- 	for(let i = 0; i < 4; i++) {
-			//- 		dates[i] = $(`#date_${i}`).val();
-			//- 		numbers[i] = $(`#number_${i}`).val();
-			//- 		selectBox[i] = $(`#select_${i}`).val();
-			//- 	}
-			//- 	let tableData = {
-			//- 		'dates' : dates,
-			//- 		'numbers' : numbers,
-			//- 		'selectBox' : selectBox
-			//- 	};
+			//- load datepicker to every row
+			$('.date').each(function(){
+				$(this).datepicker();
+			});
 
-			//- 	location.href = `/v1/gettableview?table_data=${JSON.stringify(tableData)}`;
-			//- 	//- form.submit()
-			//- })
-			//- */
+			//- form submit
 			$('.table_entry').submit(function(e) {
 				let table_data = []
 				$('#mytable tr').each(function(){
-					console.log('row')
 					let td_data = []
 					$(this).find('td').each(function(){
-						console.log($(this).children().val());
 						td_data.push($(this).children().val());
-						let header = $(this).closest('table').find('th').eq($(this).index());
-						console.log(header.text())
 					})
 					table_data.push({
 						"row_data" : td_data
 					})
 				})
-
-				console.log(table_data)
 
 				$("<input />").attr("type", "hidden").attr("name", "table_data").attr("value", JSON.stringify(table_data)).appendTo(".table_entry");
 				return true;
@@ -147,9 +113,8 @@ block scripts
 
 					// If we didn't hit a boundary, update the current cell
 					if (c.length > 0) {
-							console.log('focus', c)
-							currCell = c;
-							currCell.focus();
+						currCell = c;
+						currCell.focus();
 					}
 			});
 		})
